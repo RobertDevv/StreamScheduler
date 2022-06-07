@@ -18,13 +18,13 @@ else
 
 <MudPaper Class="align-center justify-center py-8 mud-width-full d-flex">
     <MudStack AlignItems=AlignItems.Stretch>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Monday </strong>@schedule.Monday BST</MudText></MudPaper>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Tuesday </strong>@schedule.Tuesday BST</MudText></MudPaper>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Wednesday </strong>@schedule.Wednesday BST</MudText></MudPaper>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Thursday </strong>@schedule.Thursday BST</MudText></MudPaper>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Friday </strong>@schedule.Friday BST</MudText></MudPaper>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Saturday </strong>@schedule.Saturday BST</MudText></MudPaper>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Sunday </strong>@schedule.Sunday BST</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Monday </strong>@schedule.Monday UTC</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Tuesday </strong>@schedule.Tuesday UTC</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Wednesday </strong>@schedule.Wednesday UTC</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Thursday </strong>@schedule.Thursday UTC</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Friday </strong>@schedule.Friday UTC</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Saturday </strong>@schedule.Saturday UTC</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Sunday </strong>@schedule.Sunday UTC</MudText></MudPaper>
     </MudStack>
 </MudPaper>
 
@@ -117,7 +117,7 @@ else
         else
         {
             _streamTimer = timeDifference.Value.Hours + " hours, " + timeDifference.Value.Minutes + " minutes and " + timeDifference.Value.Seconds + " seconds";
-            _streamDate = day.Value + " BST";
+            _streamDate = day.Value + " UTC";
         }
         InvokeAsync(StateHasChanged);
     } 
