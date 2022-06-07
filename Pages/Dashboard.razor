@@ -1,0 +1,81 @@
+﻿@page "/dashboard"
+@using ScheduleWeb.Data
+@inject NavigationManager NavManager
+
+<PageTitle>Dashboard</PageTitle>
+
+<MudPaper Class="align-center" Style="padding-left: 25%; padding-right: 25%; padding-top: 5px; padding-bottom: 5px; margin-top: 25px; margin-bottom: 25px;">
+    <MudTextField T="TimeSpan" Label="Monday" InputType="InputType.Time" @bind-Value="@schedule.Monday"/>
+    <MudTextField T="TimeSpan" Label="Tuesday" InputType="InputType.Time" @bind-Value="@schedule.Tuesday"/>
+    <MudTextField T="TimeSpan" Label="Wednesday" InputType="InputType.Time" @bind-Value="@schedule.Wednesday"/>
+    <MudTextField T="TimeSpan" Label="Thursday" InputType="InputType.Time" @bind-Value="@schedule.Thursday"/>
+    <MudTextField T="TimeSpan" Label="Friday" InputType="InputType.Time" @bind-Value="@schedule.Friday"/>
+    <MudTextField T="TimeSpan" Label="Saturday" InputType="InputType.Time" @bind-Value="@schedule.Saturday"/>
+    <MudTextField T="TimeSpan" Label="Sunday" InputType="InputType.Time" @bind-Value="@schedule.Sunday"/>
+</MudPaper>
+
+<MudPaper Class="d-flex" Style="padding-left: 25%; padding-right: 25%; padding-top: 5px; padding-bottom: 5px; margin-top: 25px; margin-bottom: 25px;">
+    <MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Text" InputType="InputType.Password" />
+    <MudButton Variant="Variant.Filled" Color="@ButtonColor" OnClick="SaveSchedule">@ButtonText</MudButton>
+</MudPaper>
+
+
+
+
+@code {
+    private Data.Models.Schedule schedule;
+    public string Password { get; set; }
+    public string ButtonText = "Save Changes";
+    public Color ButtonColor = Color.Primary;
+
+    protected override void OnInitialized() {
+
+        GetSchedule();
+
+    }
+
+    public void SaveSchedule()
+    {
+        using(var db = new DatabaseContext())
+        {
+            var login = db.Logins.FirstOrDefault(x => x.Password == Password);
+            if(login == null)
+            {
+                ButtonText = "Wrong Password";
+                ButtonColor = Color.Error;
+                return;
+            }
+            ButtonText = "Saving..";
+            ButtonColor = Color.Info;
+
+            var sched = db.Schedule.FirstOrDefault();
+            db.Schedule.Remove(sched);
+            db.SaveChanges();
+            db.Schedule.Add(schedule);
+            db.SaveChanges();
+
+            Console.WriteLine($"[{DateTime.Now}] Schedule updated!");
+            ButtonText = "Saved!";
+            ButtonColor = Color.Success;
+            NavManager.NavigateTo("/");
+        }
+    }
+
+    public void GetSchedule()
+    {
+        using (var db = new DatabaseContext())
+        {
+            schedule = new Data.Models.Schedule
+                {
+                    Monday = db.Schedule.FirstOrDefault().Monday,
+                    Tuesday = db.Schedule.FirstOrDefault().Tuesday,
+                    Wednesday = db.Schedule.FirstOrDefault().Wednesday,
+                    Thursday = db.Schedule.FirstOrDefault().Thursday,
+                    Friday = db.Schedule.FirstOrDefault().Friday,
+                    Saturday = db.Schedule.FirstOrDefault().Saturday,
+                    Sunday = db.Schedule.FirstOrDefault().Sunday
+                };
+        }
+    }
+
+}

@@ -1,0 +1,23 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider IsDarkMode=@_isDarkMode/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+<MudLayout>
+    <MudAppBar>
+        <MudText Typo=Typo.h5>Stream Schedule</MudText>
+        <MudSpacer />
+        <MudToggleIconButton @bind-Toggled="@_isDarkMode"
+                     Icon="@Icons.Filled.WbSunny" Color="@Color.Warning" Title="Off"
+                     ToggledIcon="@Icons.Filled.Nightlight" ToggledColor="@Color.Secondary" ToggledTitle="On"/>
+    </MudAppBar>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+
+@code {
+    private bool _isDarkMode = true;
+}

@@ -1,0 +1,125 @@
+﻿@page "/"
+@using ScheduleWeb.Data
+@using System.Timers
+
+<PageTitle>Stream Schedule</PageTitle>
+
+@if (isLiveToday)
+{
+    <MudText Align=Align.Center Typo=Typo.h6 Style="padding-top: 25px;">The stream starts in..</MudText>
+    <MudText Align=Align.Center Typo=Typo.h3>@_streamTimer</MudText>
+    <MudText Align=Align.Center Typo=Typo.subtitle1 Style="padding-bottom: 10px;">@_streamDate</MudText>
+}
+else
+{
+    <MudText Align=Align.Center Typo=Typo.h3 Style="padding-top: 25px;">No stream today!</MudText>
+    <MudText Align=Align.Center Typo=Typo.subtitle1 Style="padding-bottom: 10px;">No stream for the rest of the day! Check back tomorrow!</MudText>
+}
+
+<MudPaper Class="align-center justify-center py-8 mud-width-full d-flex">
+    <MudStack AlignItems=AlignItems.Stretch>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Monday </strong>@schedule.Monday BST</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Tuesday </strong>@schedule.Tuesday BST</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Wednesday </strong>@schedule.Wednesday BST</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Thursday </strong>@schedule.Thursday BST</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Friday </strong>@schedule.Friday BST</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Saturday </strong>@schedule.Saturday BST</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Sunday </strong>@schedule.Sunday BST</MudText></MudPaper>
+    </MudStack>
+</MudPaper>
+
+
+@code {
+    public bool isLiveToday = false;
+    public TimeSpan? day = null;
+
+    private string _streamTimer;
+    private string _streamDate;
+    public Data.Models.Schedule schedule;
+
+    protected override void OnInitialized() {
+
+        GetStreamTimer();
+        GetSchedule();
+
+    }
+
+    public void GetSchedule()
+    {
+        using (var db = new DatabaseContext())
+        {
+            schedule = new Data.Models.Schedule
+                {
+                    Monday = db.Schedule.FirstOrDefault().Monday,
+                    Tuesday = db.Schedule.FirstOrDefault().Tuesday,
+                    Wednesday = db.Schedule.FirstOrDefault().Wednesday,
+                    Thursday = db.Schedule.FirstOrDefault().Thursday,
+                    Friday = db.Schedule.FirstOrDefault().Friday,
+                    Saturday = db.Schedule.FirstOrDefault().Saturday,
+                    Sunday = db.Schedule.FirstOrDefault().Sunday
+                };
+        }
+    }
+
+    public void GetStreamTimer()
+    {
+        using(var db = new DatabaseContext())
+        {
+            switch(DateTime.Now.DayOfWeek)
+            {
+                case DayOfWeek.Monday:
+                    day = db.Schedule.FirstOrDefault().Monday;
+                    break;
+                case DayOfWeek.Tuesday:
+                    day = db.Schedule.FirstOrDefault().Tuesday;
+                    break;
+                case DayOfWeek.Wednesday:
+                    day = db.Schedule.FirstOrDefault().Wednesday;
+                    break;
+                case DayOfWeek.Thursday:
+                    day = db.Schedule.FirstOrDefault().Thursday;
+                    break;
+                case DayOfWeek.Friday:
+                    day = db.Schedule.FirstOrDefault().Friday;
+                    break;
+                case DayOfWeek.Saturday:
+                    day = db.Schedule.FirstOrDefault().Saturday;
+                    break;
+                case DayOfWeek.Sunday:
+                    day = db.Schedule.FirstOrDefault().Sunday;
+                    break;
+            }
+
+            if(day == null)
+            {
+                isLiveToday = false;
+                return;
+            }
+            else
+            {
+                var timer = new System.Timers.Timer(1000);
+                timer.Elapsed += OnTimerElapsed;
+                timer.Start();
+                isLiveToday = true;
+            }
+        }
+    }
+
+    public void OnTimerElapsed(object sender, ElapsedEventArgs e)
+    {
+        var timeDifference = day - DateTime.Now.TimeOfDay;
+
+        if (timeDifference.Value.TotalSeconds < 0)
+        {
+            isLiveToday = false;
+            // API Request here to check if live?
+        }
+        else
+        {
+            _streamTimer = timeDifference.Value.Hours + " hours, " + timeDifference.Value.Minutes + " minutes and " + timeDifference.Value.Seconds + " seconds";
+            _streamDate = day.Value + " BST";
+        }
+        InvokeAsync(StateHasChanged);
+    } 
+
+}
