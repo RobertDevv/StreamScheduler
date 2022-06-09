@@ -7,8 +7,7 @@
 @if (isLiveToday)
 {
     <MudText Align=Align.Center Typo=Typo.h6 Style="padding-top: 25px;">The stream starts in..</MudText>
-    <MudText Align=Align.Center Typo=Typo.h3>@_streamTimer</MudText>
-    <MudText Align=Align.Center Typo=Typo.subtitle1 Style="padding-bottom: 10px;">@_streamDate</MudText>
+    <MudText Align=Align.Center Typo=Typo.h3 Style="padding-bottom: 10px;">@_streamTimer</MudText>
 }
 else
 {
@@ -16,17 +15,19 @@ else
     <MudText Align=Align.Center Typo=Typo.subtitle1 Style="padding-bottom: 10px;">No stream for the rest of the day! Check back tomorrow!</MudText>
 }
 
+
 <MudPaper Class="align-center justify-center py-8 mud-width-full d-flex">
     <MudStack AlignItems=AlignItems.Stretch>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Monday </strong>@schedule.Monday UTC</MudText></MudPaper>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Tuesday </strong>@schedule.Tuesday UTC</MudText></MudPaper>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Wednesday </strong>@schedule.Wednesday UTC</MudText></MudPaper>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Thursday </strong>@schedule.Thursday UTC</MudText></MudPaper>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Friday </strong>@schedule.Friday UTC</MudText></MudPaper>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Saturday </strong>@schedule.Saturday UTC</MudText></MudPaper>
-        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Sunday </strong>@schedule.Sunday UTC</MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Monday </strong><ToLocal DateTime=@TStoDT(schedule.Monday) Format="HH:MM"></ToLocal></MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Tuesday </strong><ToLocal DateTime=@TStoDT(schedule.Tuesday) Format="HH:MM"></ToLocal></MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Wednesday </strong><ToLocal DateTime=@TStoDT(schedule.Wednesday) Format="HH:MM"></ToLocal></MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Thursday </strong><ToLocal DateTime=@TStoDT(schedule.Thursday) Format="HH:MM"></ToLocal></MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Friday </strong><ToLocal DateTime=@TStoDT(schedule.Friday) Format="HH:MM"></ToLocal></MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Saturday </strong><ToLocal DateTime=@TStoDT(schedule.Saturday) Format="HH:MM"></ToLocal></MudText></MudPaper>
+        <MudPaper Class="pa-3"><MudText Typo=Typo.body1 Align=Align.Center><strong>Sunday </strong><ToLocal DateTime=@TStoDT(schedule.Sunday) Format="HH:MM"></ToLocal></MudText></MudPaper>
     </MudStack>
 </MudPaper>
+<MudText Typo=Typo.body1 Align=Align.Center Style="padding-top: 5px;">All times above are set to your server time.</MudText>
 
 
 @code {
@@ -34,8 +35,12 @@ else
     public TimeSpan? day = null;
 
     private string _streamTimer;
-    private string _streamDate;
     public Data.Models.Schedule schedule;
+
+    public DateTime TStoDT(TimeSpan time)
+    {
+        return new DateTime() + time;
+    }
 
     protected override void OnInitialized() {
 
@@ -117,7 +122,6 @@ else
         else
         {
             _streamTimer = timeDifference.Value.Hours + " hours, " + timeDifference.Value.Minutes + " minutes and " + timeDifference.Value.Seconds + " seconds";
-            _streamDate = day.Value + " UTC";
         }
         InvokeAsync(StateHasChanged);
     } 

@@ -13,7 +13,7 @@
     <MudTextField T="TimeSpan" Label="Saturday" InputType="InputType.Time" @bind-Value="@schedule.Saturday"/>
     <MudTextField T="TimeSpan" Label="Sunday" InputType="InputType.Time" @bind-Value="@schedule.Sunday"/>
 </MudPaper>
-
+<MudText Typo=Typo.body1 Align=Align.Center>All times above are set to your server time.</MudText>
 <MudPaper Class="d-flex" Style="padding-left: 25%; padding-right: 25%; padding-top: 5px; padding-bottom: 5px; margin-top: 25px; margin-bottom: 25px;">
     <MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Text" InputType="InputType.Password" />
     <MudButton Variant="Variant.Filled" Color="@ButtonColor" OnClick="SaveSchedule">@ButtonText</MudButton>
